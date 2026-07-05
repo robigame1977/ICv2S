@@ -51,4 +51,5 @@ export default async function loadEvents(client) {
 
     await eventTableUI(events)
     functions.consoleMessages.info(`Successfully loaded ${count-invalidCount}/${count} events!`)
+    return (count-invalidCount===count)
 }

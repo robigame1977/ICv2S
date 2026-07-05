@@ -6,8 +6,10 @@ const client = new Client({ intents: config.intents, partials: config.partials }
 client.commands = new Collection();
 client.applicationAnswers = new Collection();
 
-if (config.alwaysDeploy) await functions.commandsHandler.deploy()
-await functions.commandsHandler.loadCommands(client)
-await functions.eventsHandler(client)
+await functions.coreHandler.loadConfig()
+await functions.coreHandler.deployCommands()
+await functions.coreHandler.loadCommands(client)
+await functions.coreHandler.loadEvents(client)
+await functions.coreHandler.coreErrorResult()
 
-client.login(functions.getToken());
+functions.botLogin.init(client)

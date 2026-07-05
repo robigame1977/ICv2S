@@ -2,6 +2,7 @@ import { ChannelType, MessageFlags, PermissionFlagsBits, PermissionOverwrites } 
 import r from './../path.js'
 
 export async function handle(interaction) {
+    if (!r.config.tickets.enableTickets) return await interaction.reply({flags: MessageFlags.Ephemeral, content: "**Tickets have been disabled by the server administrator.** Please try again later or contact the administrator."})
     const ticketType = interaction.customId.split("::")[1]
     const isNews = (ticketType === "news") ? true : false;
     if (isNews) {

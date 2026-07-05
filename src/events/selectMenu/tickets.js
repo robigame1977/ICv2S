@@ -2,6 +2,7 @@ import { MessageFlags } from 'discord.js'
 import r from './../path.js'
 
 export async function handle(interaction) {
+    if (!r.config.tickets.enableTickets) return await interaction.reply({flags: MessageFlags.Ephemeral, content: "**Tickets have been disabled by the server administrator.** Please try again later or contact the administrator."})
     const value = interaction.values[0]
 
     let ticketType = "general"

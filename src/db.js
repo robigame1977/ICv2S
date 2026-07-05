@@ -1,13 +1,24 @@
 import mysql from "mysql2/promise";
-import config from './config.js'
+import dotenv from 'dotenv'
 import r from './functions/functions.js'
 
+console.log("Initializing seperate dotenv session for database connection.")
+dotenv.config({quiet:true})
+
+const environment = {
+    databaseHost: process.env.DATABASE_HOST,
+    databasePort: process.env.DATABASE_PORT,
+    databaseName: process.env.DATABASE_NAME,
+    databaseUsername: process.env.DATABASE_USERNAME,
+    databasePassword: process.env.DATABASE_PASSWORD,
+  }
+
 const pool = mysql.createPool({
-  host: config.environment.databaseHost,
-  port: config.environment.databasePort ?? 3306,
-  user: config.environment.databaseUsername,
-  password: config.environment.databasePassword,
-  database: config.environment.databaseName,
+  host: environment.databaseHost,
+  port: environment.databasePort ?? 3306,
+  user: environment.databaseUsername,
+  password: environment.databasePassword,
+  database: environment.databaseName,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,

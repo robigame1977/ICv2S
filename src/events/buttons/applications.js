@@ -2,6 +2,7 @@ import { MessageFlags, PermissionFlagsBits } from 'discord.js'
 import r from '../path.js'
 
 export async function handle(interaction) {
+    if (!r.config.applications.enableApplications) return await interaction.reply({flags: MessageFlags.Ephemeral, content: "**Applications have been disabled by the server administrator.** Please try again later or contact the administrator."})
     const [_, action, data] = interaction.customId.split("::")
     await interaction.user.createDM();
 
@@ -31,9 +32,8 @@ export async function handle(interaction) {
             await interaction.editReply("**Successfully cancelled the application.** Mistake? You can always create a new one!")
             break;
         case "accept":
-            break;
         case "deny":
-            break;
+            return await interaction.reply("This button's logic is not ready in the current version of ICv2S. Please update to latest one if available.")
         default:
             return await interaction.reply("Undefined button. Please try again later or contact us via tickets.");
     }

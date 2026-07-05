@@ -66,6 +66,8 @@ export async function loadCommands(client) {
     }
     await commandTableUI(cmds)
     functions.consoleMessages.info(`Successfully loaded ${validCount}/${count} commands!`)
+
+    return (validCount===count)
 }
 
 
@@ -107,5 +109,6 @@ export async function deploy() {
       }
     } catch (error) {
       console.error(error);
+      return false
     }
 }

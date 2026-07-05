@@ -8,4 +8,7 @@ function getToken() {
     return token  
 }
 
-export default getToken
+export function init(client) {
+    if (!config.MDCER) client.login(getToken());
+    else throw new Error("Stopped the bot process. You can now disable MDCER.")
+}
