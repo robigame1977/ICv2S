@@ -1,7 +1,9 @@
 // With the new project policy, we do not store any configuration related to events and commands.
 // Example of what we store: index configuration, bot intents etc.
+//
+// TODO: Deploy config 'tickets' (only ids and booleans), 'imageAssets', 'emojiAssets' and 'applications' to the database
 
-import { GatewayIntentBits } from 'discord.js'
+import { GatewayIntentBits, Partials } from 'discord.js'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -19,8 +21,16 @@ const tickets = {
     supportRoles: supportRoles,
     newsRoles: newsRoles,
     ticketsCategory: "1522312147726630922",
-    transcriptsChannel: "1522341862306877583"
+    transcriptions: {
+        enableTranscripts: false, //todo
+        transcriptsChannel: "1522341862306877583",
+    }
 };
+
+const applications = {
+    resultsChannel: "1523077423468646450",
+    enableApplications: true, // todo
+}
 
 const imageAssets = {
     banner: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN40_WEi8F0UOeEJkMZ-1AwKlqBwxSZhcGjd_sbnrAaiJ9RmjOTD_BNgxU&s=10",
@@ -40,7 +50,14 @@ const intents = [
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildPresences,
-    GatewayIntentBits.GuildMessages
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.DirectMessageTyping
+]
+
+const partials = [
+    Partials.Channel,
+    Partials.Message,
 ]
 
 const environment = {
@@ -60,10 +77,18 @@ function emojiId(emojiSnowflake) {
     return match ? match[0] : null;
 }
 
+/* ------------------ //
+// developer configuration
+// features configuration
+// assets configuration
+// bot configuration + environment keys
+// functions
+// ------------------ */
+
 export default {
     developerID, alwaysDeploy,
-    tickets,
+    tickets, applications,
     imageAssets, emojiAssets,
-    intents, environment,
+    intents, partials, environment,
     emojiId,
 }

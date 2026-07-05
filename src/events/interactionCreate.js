@@ -90,9 +90,11 @@ export default {
     name: Events.InteractionCreate,
     async execute(interaction, client) {
         // ICv2S Policy s3.1 (thou shall not use outside authorized servers; <add later database quering>)
-        if (![r.config.environment.discordGuildID, "1243290623252107396"].includes(interaction.guild.id)) {
-            // system.icv2.cloud/wiki/err#s301 
-            return await interaction.reply({flags: MessageFlags.Ephemeral, content: "This server is not authorized in ICv2S official database.\n-# [Read more about this error](<https://icv2.cloud/>)"})
+        if (interaction.guild) {
+            if (![r.config.environment.discordGuildID, "1243290623252107396"].includes(interaction.guild.id)) {
+                // system.icv2.cloud/wiki/err#s301 
+                return await interaction.reply({flags: MessageFlags.Ephemeral, content: "This server is not authorized in ICv2S official database.\n-# [Read more about this error](<https://icv2.cloud/>)"})
+            }
         }
 
         if (interaction.isStringSelectMenu()) return await handleStringSelectMenu(interaction);
