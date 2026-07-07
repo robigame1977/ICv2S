@@ -4,7 +4,6 @@
 // Config is excluded from use when it comes to './db.js' due to possible hydration error.
 
 import { GatewayIntentBits, Partials } from 'discord.js'
-import db from './db.js'
 import r from './functions/functions.js'
 import dotenv from 'dotenv'
 dotenv.config()
@@ -50,6 +49,8 @@ let applications = {
     enableApplications: true,
 }
 
+let welcomeChannel = "1243290623252107400"
+
 let imageAssets = {
     banner: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN40_WEi8F0UOeEJkMZ-1AwKlqBwxSZhcGjd_sbnrAaiJ9RmjOTD_BNgxU&s=10",
     banner_utility: "https://system.icv2.cloud/assets/banner_utility.jpg",
@@ -82,6 +83,7 @@ const environment = {
     discordToken: process.env.DISCORD_TOKEN,
     discordClientID: process.env.DISCORD_CLIENT_ID,
     discordGuildID: process.env.DISCORD_GUILD_ID,
+    apiKey: process.env.ICV2_API_KEY
 }
 
 // Extract the id for the emojis inside selectMenus
@@ -90,13 +92,47 @@ function emojiId(emojiSnowflake) {
     return match ? match[0] : null;
 }
 
+function applyConfig(configVal, configVar) { 
+    if (configVal) { 
+        r.consoleMessages.secondary(`・Loaded ${configVar} from database`)
+        configVar = configVal
+    }; 
+}
+
 async function init() {
     // Get config from config table duh
-    const [rows] = await db.query("SELECT * FROM config WHERE guild_id = ?", environment.discordGuildID)
-    if (rows.length <= 0) {
+    const configEntry = await r.icv2.guildConfig.retrieveConfig(environment.discordGuildID)
+    if (!configEntry) {
         r.consoleMessages.warn("NOTICE! You do not have any configuration created for the bot.\nNOTICE! To create one, please issue the config creation from your ICv2S panel.\nNOTICE! Using default configuration as a fallback.\nNOTICE!\nNOTICE! Keep in mind that ICv2S network features may not be available in this current state due to the lack of service_token.")
         return false
     }
+    const config = configEntry.configuration
+
+    if (configEntry.server_admin) developerID.push(...config.developerID)
+    if (configEntry.disabled) throw new Error("Your ICv2S configuration is disabled, please check the inbox or contact the administrator.")
+
+    if (config) {
+        r.consoleMessages.secondary(`------ Remote configuration ------`)
+        // Tickets
+        applyConfig(config.tickets.supportRole, supportRole)
+        applyConfig(config.tickets.hrRole, hrRole)
+        applyConfig(config.tickets.ticketCategory, tickets.ticketsCategory)
+        applyConfig(config.tickets.ticketLogsChannel, tickets.ticketLogsChannel)
+        applyConfig(config.tickets.enableTickets, tickets.enableTickets)
+        applyConfig(config.tickets.enableTranscripts, tickets.enableTranscripts)
+
+        // Applications
+        applyConfig(config.applications.resultsChannel, applications.resultsChannel)
+        applyConfig(config.applications.enableApplications, applications.enableApplications)   
+        r.consoleMessages.secondary(`---- End Remote configuration ----`)
+    } else {
+        r.consoleMessages.secondary("Remote configuration for this guildId is empty.")
+    }
+
+    //todo - add assets support later
+
+    r.consoleMessages.info("Loaded configuration from ICv2S shared database.")
+    return true
 }
 
 /* ------------------ //
@@ -109,7 +145,7 @@ async function init() {
 
 export default {
     developerID, alwaysDeploy, MDCER,
-    tickets, applications,
+    tickets, applications, welcomeChannel,
     imageAssets, emojiAssets,
     intents, partials, environment,
     emojiId,

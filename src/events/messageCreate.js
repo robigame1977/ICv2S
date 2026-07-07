@@ -28,7 +28,7 @@ export default {
                     try {
                         const resultsChannel = await client.channels.fetch(r.config.applications.resultsChannel);
                         const resultsMessage = await resultsChannel.send({flags: MessageFlags.IsComponentsV2, components: r.functions.getComponents.applications_results.results(appUUID,session.appType,message.author.id,Date.now(),session.answers)})
-                        await r.db.query("INSERT INTO applications (userid, app_type, app_uuid, created_at, answers, resultsMessageId) VALUES (?, ?, ?, NOW(), ?, ?)", [userId, session.appType, appUUID, JSON.stringify(session.answers), resultsMessage.id])
+                        r.functions.icv2.applications.create(userId, session.appType, appUUID, JSON.stringify(session.answers), resultsMessage.id)
                         message.channel.send({flags: MessageFlags.IsComponentsV2, components: r.functions.getComponents.applications.finished(appUUID)})
                     } catch (err) {
                         console.error(err)

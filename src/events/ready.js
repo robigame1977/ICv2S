@@ -4,7 +4,7 @@ import path from './path.js'
 export default {
     name: Events.ClientReady,
     once: true,
-    execute(client) {
+    async execute(client) {
         path.functions.consoleMessages.info(`Ready! Logged in as ${client.user.tag}`);
 		path.functions.consoleMessages.secondary("ICv2 wishes you a great day!");
         client.user.setPresence({

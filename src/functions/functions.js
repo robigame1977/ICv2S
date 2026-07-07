@@ -1,3 +1,4 @@
+import icv2 from './icv2.js'
 import * as consoleMessages from './consoleMessages.js'
 import * as commandsHandler from './commandsHandler.js'
 import * as applications from './applications.js'
@@ -10,11 +11,8 @@ import * as coreHandler from './validators/coreHandler.js'
 
 import * as accountStats from './utils/accountStats.js'
 
-import pool from './../db.js'
-
 export default {
-    consoleMessages, commandsHandler, eventsHandler, getComponents, getModals, applications,
+    icv2, consoleMessages, commandsHandler, eventsHandler, getComponents, getModals, applications,
     botLogin, coreHandler,
     accountStats,
-    pool,
 }

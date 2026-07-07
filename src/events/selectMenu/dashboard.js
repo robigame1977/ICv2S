@@ -14,13 +14,12 @@ export async function handle(interaction) {
         case "settings":
         case "settings2":
             await interaction.deferReply({flags: [MessageFlags.Ephemeral]})
-            const [rows] = await r.pool.query("SELECT * FROM users WHERE userId = ?", [interaction.user.id])
-            if (rows.length > 0) {
-                const user = rows[0]
-                await interaction.editReply({flags: [MessageFlags.IsComponentsV2], components: await r.functions.getComponents.dashboard.settings_loggedIn(user.username, user.userUUID, r.accountStats.getAccountAgeMessage(user.created_at))})
-            } else {
-                await interaction.editReply({flags: [MessageFlags.IsComponentsV2], components: r.functions.getComponents.dashboard.settings_notLoggedIn})
+            const user = await r.functions.icv2.getUser.byUserID(interaction.user.id)
+            console.log(user)
+            if (!user.username)  {
+                return await interaction.editReply({flags: [MessageFlags.IsComponentsV2], components: r.functions.getComponents.dashboard.settings_notLoggedIn})
             }
+            await interaction.editReply({flags: [MessageFlags.IsComponentsV2], components: await r.functions.getComponents.dashboard.settings_loggedIn(user.username, user.userUUID, r.functions.accountStats.getAccountAgeMessage(user.created_at))})
             break;
         default:
             await interaction.reply({flags: MessageFlags.Ephemeral, content:  "This option doesn't exist. Please try a different one or let us know by creating a ticket!"})

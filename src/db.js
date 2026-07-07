@@ -5,6 +5,8 @@ import r from './functions/functions.js'
 console.log("Initializing seperate dotenv session for database connection.")
 dotenv.config({quiet:true})
 
+throw new Error("Database feature is deprecated. Prioritize use of icv2.js instead.")
+
 const environment = {
     databaseHost: process.env.DATABASE_HOST,
     databasePort: process.env.DATABASE_PORT,
