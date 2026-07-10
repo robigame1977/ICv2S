@@ -29,8 +29,15 @@ export async function GET_request(endpoint) {
 
         return response
     } catch (error) {
-        if (error.response.status === 404) return {code: 404, error}
-        if (error.response.status === 401) throw new Error(`You are missing permissions to use ${endpoint}\n- ${error.response.data.error}\n`)
+        console.log(error)
+        if (error.code === "ECONNREFUSED") {
+            if (use_localhost) throw new Error("It seems that ICv2S web infrastructure on localhost is down. Please enable the server, fix errors or switch back to globalized solution.")
+            throw new Error("It seems that ICv2S web infrastructure is down. Please try again later")
+        }
+        if (error.response.status) {
+            if (error.response.status === 404) return {code: 404, error}
+            if (error.response.status === 401) throw new Error(`You are missing permissions to use ${endpoint}\n- ${error.response.data.error}\n`)
+        }
         if (error.response && logErrors) {
             console.error('Data:', error.response.data);
             console.error('Status:', error.response.status);

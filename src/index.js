@@ -6,6 +6,7 @@ const client = new Client({ intents: config.intents, partials: config.partials }
 client.commands = new Collection();
 client.applicationAnswers = new Collection();
 
+await functions.coreHandler.validateRoot()
 await functions.coreHandler.loadConfig()
 await functions.coreHandler.deployCommands()
 await functions.coreHandler.loadCommands(client)

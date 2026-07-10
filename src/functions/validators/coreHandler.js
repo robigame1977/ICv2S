@@ -1,5 +1,18 @@
 import config from './../../config.js'
 import functions from './../functions.js'
+import fs from 'fs'
+import path from 'path'
+
+function getVersion() {
+    try {
+        const versionPath = path.resolve('./version');
+        const curVer = fs.readFileSync(versionPath, 'utf8').trim();
+        return curVer
+    } catch (error) {
+        console.error("Failed to read version file:", error.message);
+        return false;
+    }
+}
 
 let coreErrorCount = 0
 
@@ -21,6 +34,14 @@ Calling the function again to catch the error...
         console.error(err)
     }
     functions.consoleMessages.info(`MDCER report protocol end. (${coreErrorFeature})\n\n`)
+}
+
+export async function validateRoot() {
+    const root = await functions.icv2.root.getRootQuery()
+    if (!root) throw new Error("cannot access 'root'")
+    const curVer = getVersion()
+    if (!curVer) throw new Error("getVersion() unhandled exception")
+    functions.rootValidate.init(root, functions.consoleMessages, curVer)
 }
 
 export async function loadConfig() {
